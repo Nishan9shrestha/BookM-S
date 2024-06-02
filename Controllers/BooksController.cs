@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using BookM_S.Models;
 using YourProjectNamespace.Models;
 
@@ -159,25 +159,30 @@ namespace BookM_S.Controllers
         }
 
         // POST: Books/Delete/5
+        // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);
-            if (book != null)
+            if (book == null)
             {
-                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, book.PhotoUrl.TrimStart('/'));
-
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
-
-                if (System.IO.File.Exists(imagePath))
-                {
-                    System.IO.File.Delete(imagePath);
-                }
+                return NotFound();
             }
+
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, book.PhotoUrl.TrimStart('/'));
+
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool BookExists(int id)
         {

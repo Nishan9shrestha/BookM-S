@@ -55,12 +55,8 @@
             <img src="@Model.PhotoUrl" alt="Book Image" width="200" />
         </dd>
     </dl>
-
-    <form asp-action="DeleteConfirmed" method="post">
-        <input type="hidden" asp-for="Id" />
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
         <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
     </form>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
